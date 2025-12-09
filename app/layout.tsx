@@ -16,33 +16,30 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      {/* IMPORTANT → Apply theme BEFORE page loads */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
+      <head>
+        {/* Theme Loader FIRST → fixes production issue */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function() {
               try {
-                const theme = localStorage.getItem('theme');
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
+                const saved = localStorage.getItem("theme");
+                if (saved === "dark") document.documentElement.classList.add("dark");
+                if (saved === "light") document.documentElement.classList.remove("dark");
               } catch (e) {}
-            })();
-          `,
-        }}
-      />
+            })();`,
+          }}
+        />
+      </head>
 
       <body
         className="
           antialiased
-          min-h-screen
           transition-colors duration-500
           bg-light-bg text-light-text
           dark:bg-dark-bg dark:text-dark-text
         "
       >
+        {/* auto theme watcher + pointer */}
         <ClientEffects />
 
         {children}
