@@ -9,12 +9,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ADD THESE LINES so "bg-light-bg" works in Tailwind
-        'light-bg': 'var(--light-bg)',
-        'dark-bg': 'var(--dark-bg)',
-        'light-text': 'var(--light-text)',
-        'dark-text': 'var(--dark-text)',
-        
         neon: {
           cyan: "#00ffff",
           pink: "#ff00ff",
@@ -30,3 +24,4 @@ const config: Config = {
   plugins: [],
 };
 export default config;
+
