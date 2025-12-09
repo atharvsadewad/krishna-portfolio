@@ -1,36 +1,43 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CursorGlow() {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  const glowRef = useRef<HTMLDivElement | null>(null);
 
-  const smoothX = useSpring(x, { stiffness: 120, damping: 18 });
-  const smoothY = useSpring(y, { stiffness: 120, damping: 18 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth follow animation
+  const springX = useSpring(mouseX, { stiffness: 150, damping: 18 });
+  const springY = useSpring(mouseY, { stiffness: 150, damping: 18 });
 
   useEffect(() => {
-    const update = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
+    const move = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
     };
-    window.addEventListener("mousemove", update);
-    return () => window.removeEventListener("mousemove", update);
-  }, []);
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, [mouseX, mouseY]);
 
   return (
     <motion.div
+      ref={glowRef}
       style={{
-        x: smoothX,
-        y: smoothY,
+        translateX: springX,
+        translateY: springY,
       }}
-      className="
-        fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 z-[999]
-        w-[390px] h-[390px] blur-[90px] pointer-events-none 
-        opacity-60 mix-blend-screen
-        bg-[radial-gradient(circle,var(--cursor-glow-color),transparent 65%)]
-      "
+      
+        className="
+        fixed z-[99999] pointer-events-none
+        h-[60px] w-[3px] rounded-full
+        bg-black/60 dark:bg-white
+        animate-pulse
+        shadow-[0_0_18px_rgba(0,0,0,0.28)]
+        dark:shadow-[0_0_22px_rgba(255,255,255,0.6)]
+        "
     />
   );
 }

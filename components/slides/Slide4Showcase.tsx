@@ -8,14 +8,17 @@ export default function Slide4Showcase() {
     {
       title: "Fashion Lifestyle Edit",
       thumb: "/media/work1.jpg",
+      desc: "Luxury product & model-focused brand short",
     },
     {
       title: "Cinematic Travel Story",
       thumb: "/media/work2.jpg",
+      desc: "Emotional music-driven montage",
     },
     {
       title: "Creator Reels Promo",
       thumb: "/media/work3.jpg",
+      desc: "Fast sequencing promo for creators",
     },
   ];
 
@@ -23,81 +26,109 @@ export default function Slide4Showcase() {
     <section
       id="slide4"
       className="
-        relative h-screen snap-start flex flex-col justify-center
-        px-[10vw] gap-14
+        relative h-screen snap-start w-screen overflow-hidden
+        flex flex-col justify-center items-center
         bg-light-bg dark:bg-dark-bg
         text-light-text dark:text-dark-text
         transition-colors duration-500
-        overflow-hidden
       "
     >
-      {/* background gloss */}
-      <div
-        className="
-          absolute inset-0 pointer-events-none
-          bg-[var(--surface-gloss)]
-          opacity-90
-        "
-      />
+      {/* ambient gloss */}
+      <div className="absolute inset-0 pointer-events-none bg-[var(--surface-gloss)] opacity-[0.9]" />
 
-      {/* Heading */}
+      {/* heading */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="z-10"
+        transition={{ duration: 0.9 }}
+        className="flex flex-col items-center text-center mb-14"
       >
         <p className="uppercase text-xs tracking-[0.35em] opacity-60 mb-3">
           showcase
         </p>
 
-        <h2 className="text-[44px] sm:text-[52px] font-semibold leading-tight">
-          Selected projects I’ve worked on.
+        <h2 className="text-[54px] sm:text-[62px] font-[800] leading-tight max-w-[700px]">
+          A selection of edits with distinct storytelling.
         </h2>
       </motion.div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 max-w-6xl z-10">
-        {works.map((item, index) => (
+      {/* Showcards */}
+      <div
+        className="
+          grid gap-10 w-full px-[8vw]
+          grid-cols-1 md:grid-cols-3
+          justify-items-center
+          relative z-10
+        "
+      >
+        {works.map((w, i) => (
           <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 40 }}
+            key={i}
+            initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.06 }}
             transition={{ duration: 0.6 }}
             className="
-              rounded-2xl overflow-hidden
-              cursor-pointer relative group
+              relative group cursor-pointer 
+              w-[340px] h-[240px] sm:w-[420px] sm:h-[260px]
+              rounded-[32px] overflow-hidden
             "
           >
-            <Image
-              src={item.thumb}
-              alt={item.title}
-              width={420}
-              height={240}
-              className="object-cover w-full aspect-video"
-            />
-
-            {/* gradient overlay */}
-            <div
-              className="
-                absolute inset-0 opacity-0 group-hover:opacity-100
-                transition-opacity duration-300
-                bg-gradient-to-b from-black/30 to-black/80
-              "
-            />
-
-            {/* title text */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileHover={{ opacity: 1, y: 0 }}
-              className="
-                absolute bottom-4 left-4 text-sm font-medium text-white
-                tracking-wide
-              "
+            {/* preview image */}
+            <motion.div
+              className="absolute inset-0 rounded-[32px]"
+              whileHover={{ scale: 1.12 }}
+              transition={{ duration: 0.6 }}
             >
-              {item.title}
-            </motion.p>
+              <Image
+                src={w.thumb}
+                alt={w.title}
+                fill
+                className="object-cover select-none"
+              />
+            </motion.div>
+
+            {/* subtle shadow */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="
+                absolute inset-0 bg-gradient-to-b 
+                from-black/30 via-black/20 to-black/70 
+              "
+            />
+
+            {/* text reveal */}
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileHover={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45 }}
+              className="absolute bottom-4 left-6"
+            >
+              <p className="text-white font-semibold tracking-wide text-sm">
+                {w.title}
+              </p>
+              <p className="text-white/80 text-[12px] mt-[2px] max-w-[230px]">
+                {w.desc}
+              </p>
+            </motion.div>
+
+            {/* glow on hover */}
+            <motion.div
+              className="
+                absolute inset-0 rounded-[32px]
+                pointer-events-none opacity-0
+                group-hover:opacity-100
+              "
+              animate={{
+                boxShadow: [
+                  "0px 0px 0px rgba(255,255,255,0)",
+                  "0px 15px 45px rgba(0,0,0,0.25)",
+                ],
+              }}
+              transition={{ duration: 0.45 }}
+            />
           </motion.div>
         ))}
       </div>
@@ -105,11 +136,11 @@ export default function Slide4Showcase() {
       {/* footer */}
       <motion.p
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 0.8 }}
+        whileInView={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="text-[12px] tracking-wide text-center opacity-60"
+        className="text-xs opacity-60 mt-16 tracking-wider text-center"
       >
-        Hover over a thumbnail to preview the mood
+        Hover a thumbnail to preview mood & tone
       </motion.p>
     </section>
   );

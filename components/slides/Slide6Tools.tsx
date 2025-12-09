@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 export default function Slide6Tools() {
+  const [hoveredTool, setHoveredTool] = useState<string | null>(null);
+  const [hoveredStep, setHoveredStep] = useState<number | null>(null);
+
   const tools = [
     {
       icon: "🎬",
@@ -38,25 +42,26 @@ export default function Slide6Tools() {
       id="slide6"
       className="
         relative h-screen snap-start
-        flex items-center justify-center
-        px-[10vw] gap-16
+        w-screen flex items-center justify-center
+        px-[10vw]
         bg-light-bg dark:bg-dark-bg
         text-light-text dark:text-dark-text
         transition-colors duration-500
         overflow-hidden
       "
     >
-      {/* Background gloss */}
+      {/* universal gloss */}
       <div
         className="
           absolute inset-0 pointer-events-none
           bg-[var(--surface-gloss)]
-          opacity-[0.9]
+          opacity-[0.94]
         "
       />
 
-      <div className="relative z-10 flex w-full items-start justify-between gap-16 flex-col lg:flex-row">
-        {/* LEFT – tools grid */}
+      <div className="relative z-10 flex flex-col lg:flex-row w-full gap-[70px] justify-between items-start">
+
+        {/* LEFT — Tools */}
         <div className="max-w-xl">
           <motion.p
             initial={{ opacity: 0 }}
@@ -69,93 +74,125 @@ export default function Slide6Tools() {
           <motion.h2
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-[44px] sm:text-[52px] font-bold leading-tight mb-6"
+            transition={{ duration: 0.9 }}
+            className="text-[45px] sm:text-[54px] font-[700] leading-tight mb-6"
           >
-            Tools that shape
-            <span className="block text-transparent bg-gradient-to-r from-black/85 dark:from-white to-neutral-500 bg-clip-text">
-              Krishna’s visual language.
+            The process is shaped by
+            <span className="block text-transparent bg-gradient-to-r dark:from-white from-black to-neutral-400 bg-clip-text">
+              precision tools & clean workflow.
             </span>
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 0.8, y: 0 }}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 0.88, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-sm max-w-md mb-8"
+            className="text-sm opacity-80 max-w-md mb-10"
           >
-            From rough footage to a finished piece, each tool plays a specific role
-            in pacing, mood and detail.
+            Each tool plays a role in pacing, feel, color and narrative alignment.
           </motion.p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {tools.map((tool, index) => (
+          <div className="grid grid-cols-2 gap-6">
+            {tools.map((tool) => (
               <motion.div
                 key={tool.name}
-                initial={{ opacity: 0, y: 20 }}
+                onHoverStart={() => setHoveredTool(tool.name)}
+                onHoverEnd={() => setHoveredTool(null)}
+                initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
+                transition={{ duration: 0.45 }}
                 className="
-                  rounded-2xl px-4 py-4
+                  relative rounded-3xl px-5 py-5 overflow-hidden cursor-default
                   bg-white/70 dark:bg-black/40
-                  shadow-[0_16px_40px_rgba(0,0,0,0.08)]
-                  dark:shadow-[0_18px_45px_rgba(0,0,0,0.7)]
-                  backdrop-blur-sm
-                  flex flex-col gap-1
+                  shadow-[0_20px_40px_rgba(0,0,0,0.07)]
+                  dark:shadow-[0_20px_45px_rgba(0,0,0,0.65)]
+                  backdrop-blur-md
                 "
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-xl">{tool.icon}</span>
-                  <span className="text-[15px] font-semibold">
-                    {tool.name}
-                  </span>
+                {/* Glow highlight */}
+                {hoveredTool === tool.name && (
+                  <motion.div
+                    layoutId="tool-glow"
+                    className="
+                      absolute inset-0 rounded-3xl
+                      dark:bg-white/10 bg-black/5
+                    "
+                    transition={{ duration: 0.35 }}
+                  />
+                )}
+
+                <div className="relative flex flex-col gap-1 z-10">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{tool.icon}</span>
+                    <span className="text-[16px] font-[600]">{tool.name}</span>
+                  </div>
+                  <p className="text-[13px] opacity-75 leading-tight mt-[2px]">
+                    {tool.line}
+                  </p>
                 </div>
-                <p className="text-[13px] opacity-75 mt-1">{tool.line}</p>
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* RIGHT – workflow steps */}
+        {/* RIGHT — Workflow Steps */}
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="lg:w-[320px] w-full"
+          transition={{ duration: 0.9, delay: 0.2 }}
+          className="lg:w-[310px] w-full"
         >
           <p className="uppercase text-xs tracking-[0.28em] opacity-60 mb-4">
             workflow
           </p>
 
-          <div className="relative">
-            {/* vertical line */}
-            <div className="absolute left-3 top-1 bottom-1 w-[1px] bg-gradient-to-b from-neutral-400/70 to-neutral-300/10 dark:from-neutral-500/80 dark:to-neutral-700/10" />
+          <ul className="space-y-6 relative">
+            {flow.map((step, index) => (
+              <motion.li
+                key={step}
+                onHoverStart={() => setHoveredStep(index)}
+                onHoverEnd={() => setHoveredStep(null)}
+                className="relative pl-8"
+              >
+                {/* Number badge */}
+                <motion.div
+                  layoutId={`badge-${index}`}
+                  className="
+                    absolute -left-7 top-1 w-[22px] h-[22px]
+                    rounded-full text-[11px] flex items-center justify-center
+                    border border-neutral-300 dark:border-neutral-600
+                    bg-light-bg dark:bg-dark-bg
+                  "
+                  animate={{
+                    backgroundColor:
+                      hoveredStep === index
+                        ? "rgba(255,255,255,0.10)"
+                        : "transparent",
+                  }}
+                >
+                  {index + 1}
+                </motion.div>
 
-            <ul className="space-y-5 pl-8">
-              {flow.map((step, idx) => (
-                <li key={step} className="relative">
-                  <div
-                    className="
-                      absolute -left-8 top-1.5 w-5 h-5 rounded-full
-                      border border-neutral-300 dark:border-neutral-600
-                      bg-light-bg dark:bg-dark-bg
-                      flex items-center justify-center text-[10px]
-                    "
-                  >
-                    {idx + 1}
-                  </div>
-                  <p className="text-sm font-medium">{step}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
+                <motion.p
+                  animate={{
+                    opacity: hoveredStep === index ? 1 : 0.7,
+                    x: hoveredStep === index ? 6 : 0,
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="text-[15px] font-medium tracking-tight"
+                >
+                  {step}
+                </motion.p>
+              </motion.li>
+            ))}
+          </ul>
 
-          <p className="mt-8 text-[12px] opacity-70 leading-relaxed">
-            Each project moves through this arc:{" "}
-            <span className="font-medium">
-              Story → Visual feel → Music → Structure
-            </span>
-            , so every cut feels intentional, not random.
+          <p className="mt-10 text-[12px] opacity-75 leading-relaxed max-w-xs">
+            Every edit follows an arc:
+            <br />
+            <span className="font-semibold">Story → Visual Feel → Music → Structure</span>
+            <br />
+            so every cut lands with purpose—not randomness.
           </p>
         </motion.div>
       </div>

@@ -1,30 +1,42 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export default function ThemeToggle() {
-  const [theme, setTheme] = useState('dark');
+export default function CursorGlow() {
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [color, setColor] = useState("rgba(0,0,0,0.10)");
 
-  useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) setTheme(saved);
-    document.documentElement.classList.add(saved || "dark");
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-
-    document.documentElement.classList.remove("dark", "light");
-    document.documentElement.classList.add(newTheme);
-    localStorage.setItem("theme", newTheme);
+  const handleMove = (e: MouseEvent) => {
+    setCoords({ x: e.clientX, y: e.clientY });
   };
 
+  const applyTheme = () => {
+    const isDark = document.documentElement.classList.contains("dark");
+    setColor(isDark ? "rgba(255,255,255,0.18)" : "rgba(0,0,0,0.08)");
+  };
+
+  useEffect(() => {
+    applyTheme();
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("themeChanged", applyTheme);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("themeChanged", applyTheme);
+    };
+  }, []);
+
   return (
-    <button
-      onClick={toggleTheme}
-      className="px-3 py-2 rounded-full bg-black dark:bg-white text-white dark:text-black text-xs"
-    >
-      {theme === "dark" ? "Light Mode" : "Dark Mode"}
-    </button>
+    <div
+      className="pointer-events-none fixed z-[9999]"
+      style={{
+        left: coords.x - 90,
+        top: coords.y - 90,
+        width: 180,
+        height: 180,
+        borderRadius: "100%",
+        background: color,
+        filter: "blur(60px)",
+        transition: "background 0.4s ease"
+      }}
+    ></div>
   );
 }

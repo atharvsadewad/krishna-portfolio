@@ -1,57 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 
+/* Tailwind Layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ==============================
-          THEME TOKENS
-============================== */
+/* =========================================
+   ⬇ GLOBAL VARIABLES
+========================================= */
 :root {
   --light-bg: #ffffff;
-  --dark-bg: #0a0a0a;
+  --dark-bg: #050505;
 
   --light-text: #000000;
   --dark-text: #ffffff;
 
-  --transition-speed: 0.4s;
+  --cursor-light: rgba(0,0,0,0.08);
+  --cursor-dark: rgba(200,150,255,0.20);
 
-  /* Cursor + gloss for LIGHT mode */
-  --cursor-glow-color: rgba(0, 0, 0, 0.10);
-  --surface-gloss: radial-gradient(
-    circle at center,
-    rgba(0, 0, 0, 0.04),
-    transparent 55%
-  );
+  /* Light gloss */
+  --surface-gloss-light: radial-gradient(circle at center, rgba(0,0,0,0.03), transparent 55%);
+
+  /* Dark gloss */
+  --surface-gloss-dark: radial-gradient(circle at center, rgba(255,255,255,0.12), transparent 60%);
 }
 
-/* Dark mode overrides */
+/* Auto swap based on theme */
+html:not(.dark) {
+  --surface-gloss: var(--surface-gloss-light);
+  --cursor-glow-color: var(--cursor-light);
+}
+
 html.dark {
-  --cursor-glow-color: rgba(255, 255, 255, 0.16);
-  --surface-gloss: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.10),
-    transparent 60%
-  );
+  --surface-gloss: var(--surface-gloss-dark);
+  --cursor-glow-color: var(--cursor-dark);
 }
 
-/* ==============================
-        GLOBAL RESET + FONT
-============================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* =========================================
+   PAGE STYLING
+========================================= */
 body {
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
   background-color: var(--light-bg);
   color: var(--light-text);
+  font-family: 'Inter', sans-serif;
+
   transition:
-    background-color var(--transition-speed) ease,
-    color var(--transition-speed) ease;
+    background-color .5s ease,
+    color .4s ease;
 }
 
 html.dark body {
@@ -59,111 +54,56 @@ html.dark body {
   color: var(--dark-text);
 }
 
-/* Smooth headings font */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* Headings always visible & bold */
+h1,h2,h3,h4,h5,h6 {
   font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
-/* ==============================
-        THEMED UTIL CLASSES
-============================== */
-.bg-light-bg {
-  background-color: var(--light-bg);
-}
-
-.bg-dark-bg {
-  background-color: var(--dark-bg);
-}
-
-.text-light-text {
-  color: var(--light-text);
-}
-
-.text-dark-text {
-  color: var(--dark-text);
-}
-
-/* ==============================
-     GLOSS / GRADIENT BACKGROUND
-============================== */
-
-/* Light mode gloss by default */
-.gradient-bg {
-  background: var(--surface-gloss);
-}
-
-/* Dark mode gets animated gradient on top */
-html.dark .gradient-bg {
-  background:
-    linear-gradient(-45deg, #050505, #121212, #0b0b0b, #191919),
-    var(--surface-gloss);
-  background-size: 320% 320%;
-  animation: gradient 18s ease infinite;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* ==============================
-         CUSTOM SCROLLBAR
-============================== */
-::-webkit-scrollbar {
-  width: 9px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #b8b8b8;
-  border-radius: 4px;
-  transition: background 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #999999;
-}
-
-html.dark ::-webkit-scrollbar-thumb {
-  background: #3b3b3b;
-}
-
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #505050;
-}
-
-/* ==============================
-       SLIDE SCROLL REMOVAL
-============================== */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Improve theme transitions visually */
+/* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
-section {
-  position: relative;
-  z-index: 10;
+
+/* =========================================
+   NAVBAR ALWAYS VISIBLE — GLASS PROTECTION
+========================================= */
+.nav-glass {
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  background: rgba(255,255,255,0.52);
+  border: 1px solid rgba(100,100,100,0.18);
+  color: black;
+}
+
+html.dark .nav-glass {
+  background: rgba(0,0,0,0.42);
+  border: 1px solid rgba(200,200,200,0.22);
+  color: white;
+}
+
+/* =========================================
+   CURSOR GLOW FOR ALL SLIDES
+========================================= */
+.cursor-glow {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  width: 300px;
+  height: 300px;
+  background: var(--cursor-glow-color);
+  border-radius: 50%;
+  opacity: .35;
+  filter: blur(100px);
+  transform: translate(-50%, -50%);
+}
+
+/* =========================================
+   GLOSS EFFECT HOLDER (applies to slides)
+========================================= */
+.gloss-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--surface-gloss);
+  pointer-events: none;
 }
