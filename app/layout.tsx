@@ -7,14 +7,6 @@ export const metadata: Metadata = {
   title: "Krishna Burse | Video Editor | Photographer | Animator",
   description:
     "Professional portfolio of Krishna Burse - Expert in video editing, photography, and animation",
-  keywords:
-    "video editor, photographer, animator, motion design, portfolio",
-  authors: [{ name: "Krishna Burse" }],
-  openGraph: {
-    title: "Krishna Burse | Creative Professional",
-    description: "Video Editor | Photographer | Animator",
-    type: "website",
-  },
 };
 
 export default function RootLayout({
@@ -24,6 +16,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      {/* IMPORTANT → Apply theme BEFORE page loads */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                const theme = localStorage.getItem('theme');
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            })();
+          `,
+        }}
+      />
+
       <body
         className="
           antialiased
@@ -33,13 +43,10 @@ export default function RootLayout({
           dark:bg-dark-bg dark:text-dark-text
         "
       >
-        {/* Auto theme loader, scroll, pointer logic */}
         <ClientEffects />
 
-        {/* Render all slides & page content */}
         {children}
 
-        {/* Floating Theme Switch */}
         <ThemeFloatingToggle />
       </body>
     </html>
